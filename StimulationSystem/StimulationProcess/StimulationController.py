@@ -120,19 +120,19 @@ class StimulationController:
         
         # Preparation stage: display cue, display last results
         self.prepareProcess = PrepareProcess()
-        self.prepareProcess.initial(self, self.viewContainer, messenger)
+        self.prepareProcess.initial(self, self.viewContainer, messenger, config)
 
         # Start stimulation: flickering and display cue during stimulation
         self.stimulateProcess = StimulateProcess()
-        self.stimulateProcess.initial(self, self.viewContainer, messenger)
+        self.stimulateProcess.initial(self, self.viewContainer, messenger, config)
 
         # End stimulation: display and output results
         self.finishProcess = FinishProcess()
-        self.finishProcess.initial(self, self.viewContainer, messenger)
+        self.finishProcess.initial(self, self.viewContainer, messenger, config)
 
         # Idle state between Blocks
         self.idleProcess = IdleProcess()
-        self.idleProcess.initial(self, self.viewContainer, messenger)
+        self.idleProcess.initial(self, self.viewContainer, messenger, config)
         
         self.currentProcess = self.idleProcess
         return self

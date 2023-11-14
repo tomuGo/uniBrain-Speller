@@ -2,6 +2,8 @@ from abc import abstractmethod
 from psychopy import visual
 from psychopy.hardware import keyboard
 from StimulationSystem.EventController import EventController
+from StimulationSystem.NeuroDanceEventController import NeuroDanceEventController
+
 
 class BasicStimulationProcess:
     """
@@ -25,7 +27,7 @@ class BasicStimulationProcess:
         self.twoPhaseBox = None
 
     @abstractmethod
-    def initial(self, controller, viewContainer, messenger):
+    def initial(self, controller, viewContainer, messenger, config):
         """
         Initialize the process with the given controller, viewContainer, and messenger.
         This method is expected to be overridden by child classes.
@@ -56,7 +58,10 @@ class BasicStimulationProcess:
         self.COM = viewContainer.COM
         self.x_res = viewContainer.x_res
         self.y_res = viewContainer.y_res
-        self.eventController = EventController(COM=self.COM)
+        if config.acquisitionSys == 'NeuroScan':
+            self.eventController = EventController(COM=self.COM)
+        else:
+            self.eventController = NeuroDanceEventController()
         self.trigger_start_time = None
         self.twoPhaseBox = viewContainer.twoPhaseBox
         self.strideText = viewContainer.strideText

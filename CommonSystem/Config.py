@@ -168,7 +168,7 @@ def config_make_file(win):
     
     win.config.display_info(refreshRate=float(win.refreshRateLineEdit.text()), stiLEN=win.keyboard_manager.stim_length, resolution=map(int, win.screenResolutionsLineEdit.text().split('x')), 
                            cubicSize=win.keyboard_manager.current_key_list.cubeSize, imageAddress = 'StimulationSystem'+os.sep+'pics',halfScreen = win.keyboard_manager.halfScreen, halfScreenPos = win.keyboard_manager.halfScreenPos,
-                           windowIndex = win.monitorComboBox.currentIndex(), cueTime = win.keyboard_manager.cueTime, maxFrames = win.keyboard_manager.maxFrames)
+                           windowIndex = win.monitorComboBox.currentIndex(),acquisitionSys=win.acquisitionSystemComboBox.currentText(), cueTime = win.keyboard_manager.cueTime, maxFrames = win.keyboard_manager.maxFrames)
 
     win.config.connect_info(COM=win.hardware_manager.COM, streaming_ip=win.hardware_manager.streamingIp, streaming_port=win.hardware_manager.portNumber, 
                            host_ip='127.0.0.1')

@@ -5,9 +5,11 @@ import numpy as np
 from collections import deque
 from scipy import signal
 from loguru import logger
+
+from .BaseStreaming import BaseStreaming
 from .NeuroScanMessage import NeuroScanMessage
 
-class NeuroScanEEGThread(threading.Thread,):
+class NeuroScanEEGThread(threading.Thread,BaseStreaming):
     def __init__(self, config=None,hostname='0.0.0.0', port=4000, threadName='NeuroScanEEG', device='NeuroScan', n_chan=2, record_srate=1000, srate=250, keepEvent=False):
 
         threading.Thread.__init__(self)

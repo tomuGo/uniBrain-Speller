@@ -1,5 +1,8 @@
 # Append the current directory to the system path
 import sys
+
+from GraphicUserInterface.ui_neuro_dance_control import UINeuroDanceController
+
 sys.path.append('.')
 
 # Import necessary libraries
@@ -16,7 +19,7 @@ from make_a_report import create_pdf_main
 from ui_StimulusControl import flickering_on_complete
 
 # Load the UI file
-form_class = uic.loadUiType("GraphicUserInterface/main.ui")[0]
+form_class = uic.loadUiType("GraphicUserInterface/main_neuro_dance.ui")[0]
 
 # Import custom libraries
 import ui_keyboard as key
@@ -40,9 +43,12 @@ class mainWindow(QtWidgets.QMainWindow, form_class):
         
         # other initialization
         self.config = Config()
-        
+
         # Initialize the UI elements for the keyboard and user interface
         self.UI_init()
+
+        self.UI_neuro_dance = UINeuroDanceController(self)
+        self.UI_neuro_dance.UI_init()
         self.user_manager = user.UserManager()
         user.UI_init(self)
         self.hardware_manager = hw.HardwareManager()
@@ -143,6 +149,7 @@ class mainWindow(QtWidgets.QMainWindow, form_class):
         self.state_horizontal_tab.setTabIcon(1, keyboard_tab_image)
         self.state_horizontal_tab.setTabIcon(2, hardware_tab_image)
         self.state_horizontal_tab.setTabIcon(3, process_tab_image)
+        self.acquisitionSystemComboBox.currentTextChanged.connect(self.acquisitionSystemChanged)
         
     def handle_timer_event(self, value, text):
         
@@ -303,7 +310,24 @@ class mainWindow(QtWidgets.QMainWindow, form_class):
         self.hardware_manager.renew(self)
         self.process_manager.renew(self)
         self.keyboard_manager.renew(self)
-        self.user_manager.current_user.renew(self)    
+        self.user_manager.current_user.renew(self)
+
+    def acquisitionSystemChanged(self):
+        acquSys = self.acquisitionSystemComboBox.currentText()
+        if acquSys == 'NeuroScan':
+            self.gridLayout.setRowStretch(3, 0)
+            self.gridLayout.setRowStretch(4, 10)
+            self.NeuroDanceFrame.close()
+            self.NeuroScanFrame.show()
+
+        elif acquSys == 'NeuroDance':
+            # ports_list = list(serial.tools.list_ports.comports())
+            # for i in ports_list:
+            #     self.NeuroDanceSerialPortsComboBox.addItem(i.device)
+            self.gridLayout.setRowStretch(4, 0)
+            self.gridLayout.setRowStretch(3, 10)
+            self.NeuroDanceFrame.show()
+            self.NeuroScanFrame.close()
 
         
 if __name__ == "__main__":

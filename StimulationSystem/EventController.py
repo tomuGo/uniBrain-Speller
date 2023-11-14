@@ -2,7 +2,10 @@ from time import time
 from psychopy import parallel
 import time
 
-class EventController():
+from StimulationSystem.BaseEventController import BaseEventController
+
+
+class EventController(BaseEventController):
     def __init__(self, COM='3100') -> None:
         # hex 2 dec
         self.address = int(COM, 16)

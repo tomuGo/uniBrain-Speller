@@ -1,4 +1,7 @@
 import sys
+
+from OperationSystem.Streaming.NeuroDanceEEG import NeuroDanceEEGThread
+
 sys.path.append('.')
 import time
 from CommonSystem.Config import Config
@@ -80,7 +83,11 @@ def operation_worker(config, progress_manager):
     operationMessenger.start()
 
     # Amplifier settings
-    dataStreaming = NeuroScanEEGThread(config=config, keepEvent=True)
+    if config.acquisitionSys == 'NeuroScan':
+        dataStreaming = NeuroScanEEGThread(config=config, keepEvent=True)
+    else:
+        dataStreaming = NeuroDanceEEGThread(config=config)
+
     dataStreaming.connect()
 
     operationOperators.messenger = operationMessenger

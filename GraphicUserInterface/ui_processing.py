@@ -629,6 +629,8 @@ def sync_comboBox_changed(win):
         
     
 def run_button_clicked(win):
+    # 串口只能连接一个，先把获取设备数据的串口关掉
+    win.UI_neuro_dance.serial_stop()
     if win.process_manager.run_mode == "DEBUG":
         QtWidgets.QMessageBox.warning(win, "Debug Mode Warning", "Debug mode is currently only available for Keyboard 43 keys, debug mode is a combination of Test mode and Use mode. The Keyboard 43 keys will be selected.")
     
