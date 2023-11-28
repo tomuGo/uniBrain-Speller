@@ -96,7 +96,7 @@ class BasicStimulationProcess:
         Create and return a TextBox2 object with the specified text, color, and fillColor.
         """
         dialogue = visual.TextBox2(
-            self.w, text=text, font='Meslo LG M DZ', units='pix',
+            self.w, text=text, units='pix',
             pos=(-self.x_res/3, self.y_res/2), letterHeight=50.0,
             size=(self.x_res, 50), borderWidth=2.0,
             color=color, colorSpace='rgb',

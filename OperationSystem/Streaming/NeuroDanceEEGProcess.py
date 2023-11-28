@@ -1,17 +1,16 @@
 import math
 import sys
 import os
+current_path = os.getcwd()
+# sys.path.append(current_path + "\\OperationSystem\\Streaming\\neuro_dancer_py\\")
+from neuro_dancer.neuro_dancer_base import NeuroDancer, NeuroDancerDeviceInfo
+# from neuro_dancer import NeuroDancer, NeuroDancerDeviceInfo
 import time
 from multiprocessing.shared_memory import ShareableList
-
+from scipy import signal
 import numpy as np
 from linkedlist import linkedlist
-
 from OperationSystem.Streaming.BaseStreaming import BaseStreaming
-
-current_path = os.getcwd()
-sys.path.append(current_path + "\\OperationSystem\\Streaming\\neuro_dancer")
-import neuro_dancer_base
 from PyQt5.QtCore import pyqtSignal, QObject, QTimer
 
 
@@ -31,20 +30,42 @@ def create_device_battery_share():
         print("Battery is Exists:{0}".format(e))
 
 
-class NeuroDanceEEGThread(neuro_dancer_base.NeuroDancerBase, QObject, BaseStreaming):
+class NeuroDanceEEGProcess(NeuroDancer, QObject, BaseStreaming):
 
     # 保留5分钟的数据
     linkedlist_length = 5 * 60 * 5
     eeg_datas = linkedlist()
     srate = 250
     real_sample_rate = 1000
+    enable_eog = False
+    config = None
+    count_per_package = 100
 
     def __init__(self, config):
         self.com = config.neuro_dance_serial_port
+        self.config = config
         QObject.__init__(self, config=config)
-        neuro_dancer_base.NeuroDancerBase.__init__(self)
         BaseStreaming.__init__(self, config=config)
-        super(NeuroDanceEEGThread, self).open(self.com)
+        self.filters = self._initFilter()
+        nd_host_mac_bytes = None
+
+        if config.nd_host_mac is not None:
+            nd_host_mac_bytes = bytes.fromhex(config.nd_host_mac)
+
+        NeuroDancer.__init__(self, self.com, nd_host_mac_bytes)
+
+    def _initFilter(self):
+        fs = 250  # Sample frequency (Hz)
+        f0 = 50.0  # Frequency to be removed from signal (Hz)
+        Q = 30.0  # Quality factor
+
+        b, a = signal.iirnotch(f0, Q, fs)
+        notch = [b, a]
+
+        b, a = signal.butter(N=5, Wn=90, fs=fs, btype='lowpass')
+        bp = [b, a]
+
+        return notch, bp
 
 
     def device_battery_received(self, battery):
@@ -53,8 +74,19 @@ class NeuroDanceEEGThread(neuro_dancer_base.NeuroDancerBase, QObject, BaseStream
 
     def eeg_received(self, data):
         self.eeg_datas.add(data)
+        self.data_save(data)
         if self.eeg_datas.length() > self.linkedlist_length:
             self.eeg_datas.removeHead()
+
+    def data_save(self, data_temp):
+        path = os.path.join(self.config.resultPath, self.config.personName, 'record','data.txt')
+        with open(path, 'a+') as f:
+            f.write(str(data_temp) + "\n")
+
+    def time_save(self, time):
+        path = os.path.join(self.config.resultPath, self.config.personName, 'record', 'data_time.txt')
+        with open(path, 'a+') as f:
+            f.write(str(time) + "\n")
 
     def readFixedData(self, startPoint, length):
         # 读取刺激之后的时间窗口长度，达到时间长度就返回
@@ -63,12 +95,15 @@ class NeuroDanceEEGThread(neuro_dancer_base.NeuroDancerBase, QObject, BaseStream
             stimulation_time = event_info[0]
             event_type = event_info[1]
             if stimulation_time > 0 and 0 < event_type < 200:
-                print("stimulation_time:{0},eventType:{1}".format(stimulation_time,event_type))
+                # 屏幕刷新率 60hz
+                stimulation_time = stimulation_time + 16
+                print("readFixedData stimulation_time:{0},eventType:{1}".format(stimulation_time,event_type))
                 data = None
                 while data is None:
                     data = self.read_packet_data(stimulation_time, length * 1000)
                 data = np.array(data)
                 data = self.preprocess(data)
+                self.time_save(stimulation_time)
                 return data, event_type
         return None, None
 
@@ -79,16 +114,19 @@ class NeuroDanceEEGThread(neuro_dancer_base.NeuroDancerBase, QObject, BaseStream
             stimulation_time = event_info[0]
             event_type = event_info[1]
             if stimulation_time > 0 and 0 < event_type < 200:
-                print("stimulation_time:{0},eventType:{1}".format(stimulation_time, event_type))
+                # 屏幕刷新率 60hz
+                stimulation_time = stimulation_time + 16
+                print("readFlowData stimulation_time:{0},eventType:{1}".format(stimulation_time, event_type))
                 data = None
                 while data is None:
                     data = self.read_packet_data(stimulation_time, length * 1000)
+                data = np.array(data)
                 data = self.preprocess(data)
                 return data, event_type
         return None, None
 
     def read_packet_data(self, start_millis_second, read_millisecond):
-        start_millis_second = start_millis_second + 2
+
         eeg_data = self.read_eeg_data(start_millis_second, read_millisecond)
         if eeg_data is not None and self.enable_eog:
             eog_data = self.read_eog_data(start_millis_second, read_millisecond)
@@ -97,7 +135,8 @@ class NeuroDanceEEGThread(neuro_dancer_base.NeuroDancerBase, QObject, BaseStream
         return eeg_data
 
     def read_eeg_data(self, start_millis_second, read_millisecond):
-        packet_size = 200
+        packet_size = self.count_per_package
+        packet_time = self.count_per_package
         point_per_millis = self.real_sample_rate / 1000
         self.downRatio = int(self.srate * read_millisecond / 1000)
         # 以防万一，多取两个包，保证截取时足够长
@@ -108,17 +147,16 @@ class NeuroDanceEEGThread(neuro_dancer_base.NeuroDancerBase, QObject, BaseStream
             if eeg_left is None:
                 break
             eeg_packet_start_millis = eeg_left['timestamp']
-            if eeg_packet_start_millis + 200 < start_millis_second:
+            if eeg_packet_start_millis + packet_time < start_millis_second:
                 self.eeg_datas.removeHead()
                 continue
-            # 掐头去尾
-            eeg_start_position = int((start_millis_second - eeg_packet_start_millis) * point_per_millis)
-            if eeg_start_position < 0:
-                print("eeg time error:{0}".format(eeg_start_position))
-                eeg_start_position = 0
-            need_points = int(read_millisecond * point_per_millis)
-
             if self.eeg_datas.length() > packet_num:
+                # 掐头去尾
+                eeg_start_position = int((start_millis_second - eeg_packet_start_millis) * point_per_millis)
+                if eeg_start_position < 0:
+                    print("eeg time error:{0}".format(eeg_start_position))
+                    eeg_start_position = 0
+                need_points = int(read_millisecond * point_per_millis)
                 eeg_tmp = []
                 eeg_seqs = []
                 for i in range(packet_num):
@@ -133,14 +171,31 @@ class NeuroDanceEEGThread(neuro_dancer_base.NeuroDancerBase, QObject, BaseStream
                 break
         return eeg_data
 
+
+    def preprocess(self, x):
+        from scipy.signal import resample
+
+        x = resample(x, self.downRatio, axis=-1)  # Downsample to 1/4
+
+        notchFilter, bpFilter = self.filters
+
+        b_notch, a_notch = notchFilter
+
+        x_notched = signal.filtfilt(b_notch, a_notch, x, axis=-1)
+
+        processed = x_notched
+
+        return processed
+
     def connect(self):
-        super(NeuroDanceEEGThread, self).enable_channels()
+        super(NeuroDanceEEGProcess, self).enable_channels(self.count_per_package)
 
     def disconnect(self):
-        super(NeuroDanceEEGThread, self).close()
+        super(NeuroDanceEEGProcess, self).disable_channels()
+        super(NeuroDanceEEGProcess, self).close()
 
 
-class NeuroDanceDevice(neuro_dancer_base.NeuroDancerBase, QObject):
+class NeuroDanceDevice(NeuroDancerDeviceInfo, QObject):
     device_list_signal = pyqtSignal(list)
     host_version_update_signal = pyqtSignal(str)
     host_sn_update_signal = pyqtSignal(str)
@@ -152,7 +207,7 @@ class NeuroDanceDevice(neuro_dancer_base.NeuroDancerBase, QObject):
 
     def __init__(self, com):
         self.com = com
-        neuro_dancer_base.NeuroDancerBase.__init__(self)
+        NeuroDancerDeviceInfo.__init__(self)
         QObject.__init__(self)
         super(NeuroDanceDevice, self).open(com)
 

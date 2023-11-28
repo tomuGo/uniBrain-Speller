@@ -1,20 +1,18 @@
 import sys
 
-from OperationSystem.Streaming.NeuroDanceEEG import NeuroDanceEEGThread
 
 sys.path.append('.')
 import time
-from CommonSystem.Config import Config
 from StimulationSystem.stimulationOperator import stimulationOperator
 from StimulationSystem.StimulationProcess.StimulationController import StimulationController 
 from CommonSystem.MessageReceiver.ExchangeMessageManagement import ExchangeMessageManagement
-from StimulationSystem.UICreator.UIFactory import UIFactory
 from OperationSystem.operationOperator import operationOperator
 from OperationSystem.AnalysisProcess.AnalysisController import AnalysisController
 from OperationSystem.Streaming.NeuroScanEEG import NeuroScanEEGThread
 import multiprocessing
 import pickle
 import os
+from OperationSystem.Streaming.NeuroDanceEEGProcess import NeuroDanceEEGProcess
 
 # Define a function to start the stimulation message management process
 def stimulation_worker(config, progress_manager):
@@ -85,10 +83,9 @@ def operation_worker(config, progress_manager):
     # Amplifier settings
     if config.acquisitionSys == 'NeuroScan':
         dataStreaming = NeuroScanEEGThread(config=config, keepEvent=True)
-    else:
-        dataStreaming = NeuroDanceEEGThread(config=config)
 
-    dataStreaming.connect()
+    else:
+        dataStreaming = NeuroDanceEEGProcess(config=config)
 
     operationOperators.messenger = operationMessenger
     operationOperators.streaming = dataStreaming
@@ -98,7 +95,7 @@ def operation_worker(config, progress_manager):
 
     # Start data reception on the acquisition side
     dataStreaming.start()
-    
+    dataStreaming.connect()
     # Wait for stimulation to start
     print('Put on hold for stimulation, current state: %s' % operationMessenger.state.control_state)
 

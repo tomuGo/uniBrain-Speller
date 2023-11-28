@@ -1,6 +1,6 @@
 import time
 
-import OperationSystem.Streaming.NeuroDanceEEG
+import OperationSystem.Streaming.NeuroDanceEEGProcess
 from StimulationSystem.BaseEventController import BaseEventController
 from multiprocessing import shared_memory
 
@@ -8,7 +8,7 @@ from multiprocessing import shared_memory
 class NeuroDanceEventController(BaseEventController):
     def __init__(self) -> None:
         print("NeuroDanceEventController Init")
-        OperationSystem.Streaming.NeuroDanceEEG.create_event_share_list()
+        OperationSystem.Streaming.NeuroDanceEEGProcess.create_event_share_list()
         self.clearEvent()
 
     def sendEvent(self, eventType):

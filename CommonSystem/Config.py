@@ -110,7 +110,7 @@ class Config():
             self.prefix_with_time = f"{self.prefix}{current_time}_"
             
 
-    def connect_info(self, COM='5EFC', streaming_ip='192.168.1.13', streaming_port=4455, record_srate=1000, host_ip='192.168.1.92', host_port=11000):
+    def connect_info(self, COM='5EFC', streaming_ip='192.168.1.13', streaming_port=4455, record_srate=1000, host_ip='192.168.1.92', host_port=11000, nd_com='', nd_host_mac=''):
         """Set connection information for the experiment, such as communication ports and IP addresses."""
         self.COM = COM
         self.streaming_ip = streaming_ip
@@ -119,7 +119,7 @@ class Config():
 
         self.host_ip = host_ip
         self.host_port = host_port
-
+        self.nd_host_mac = nd_host_mac
 
     def optimized_info(self,optWIN=1,optBlockNUM=5,classNUM=160,seedNUM=1000):
         """Set optimization information for the experiment, such as window size, block number, and class number."""        
@@ -171,7 +171,7 @@ def config_make_file(win):
                            windowIndex = win.monitorComboBox.currentIndex(),acquisitionSys=win.acquisitionSystemComboBox.currentText(), cueTime = win.keyboard_manager.cueTime, maxFrames = win.keyboard_manager.maxFrames)
 
     win.config.connect_info(COM=win.hardware_manager.COM, streaming_ip=win.hardware_manager.streamingIp, streaming_port=win.hardware_manager.portNumber, 
-                           host_ip='127.0.0.1')
+                           host_ip='127.0.0.1', nd_com=win.NeuroDanceSerialPortsComboBox.currentText(), nd_host_mac=win.NeuroDanceUSBMacInfo.text())
  
     #  this must be the last one called!!
     win.config.experiment_info(MODE=win.process_manager.run_mode, targetNUM=len(win.keyboard_manager.current_key_list.keys),

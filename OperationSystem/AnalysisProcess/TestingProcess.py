@@ -274,7 +274,9 @@ class TestingProcess(BasicAnalysisProcess):
         # Record results on a block-by-block basis
 
         blockINX  = self.controller.currentBlockINX
-        y = np.concatenate(self.controller.testData['y'][-(self.controller.currentEpochINX+1):])
+
+        # y = np.concatenate(self.controller.testData['y'][-(self.controller.currentEpochINX+1):])
+        y = self.controller.testData['y'][-(self.controller.currentEpochINX+1):]
         y_ = self.controller.results[-(self.controller.currentEpochINX+1):]
         winLEN = np.array(self.controller.testData['t'][-(self.controller.currentEpochINX+1):])
         average_winLEN = np.mean(winLEN)

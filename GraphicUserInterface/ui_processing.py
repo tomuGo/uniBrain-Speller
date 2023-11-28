@@ -30,7 +30,7 @@ class ProcessManager:
         full_path = os.path.abspath(relative_folder_path)
         if not os.path.exists(relative_folder_path):
             os.makedirs(relative_folder_path)
-        self.data_saved_path  = full_path
+        self.data_saved_path = full_path
         
     def renew(self, win):
         """
@@ -630,7 +630,7 @@ def sync_comboBox_changed(win):
     
 def run_button_clicked(win):
     # 串口只能连接一个，先把获取设备数据的串口关掉
-    win.UI_neuro_dance.serial_stop()
+    win.UI_neuro_dance.stop()
     if win.process_manager.run_mode == "DEBUG":
         QtWidgets.QMessageBox.warning(win, "Debug Mode Warning", "Debug mode is currently only available for Keyboard 43 keys, debug mode is a combination of Test mode and Use mode. The Keyboard 43 keys will be selected.")
     

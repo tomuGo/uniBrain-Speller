@@ -1441,7 +1441,7 @@ p, li { white-space: pre-wrap; }
                         <widget class="QComboBox" name="NeuroDanceMontageComboBox">
                          <item>
                           <property name="text">
-                           <string>8 Channels</string>
+                           <string>10 Channels</string>
                           </property>
                          </item>
                         </widget>

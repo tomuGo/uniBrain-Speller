@@ -690,9 +690,13 @@ if __name__ == '__main__':
     import os
     import pickle
     import sys
+    import matplotlib
+
+    matplotlib.use('TkAgg')
+    import matplotlib.pyplot as plt
     current_path = os.getcwd()
-    sys.path.append(current_path)
-    file_path = "Result\\limjiale\\data\\ssvep_Keyboard 43 keys_20230409_121613_test.pkl"
+    #sys.path.append(current_path)
+    file_path = "D:\\workspace\\NeuroDance\\uniBrain-Speller\\Result\\qiushui_trained\\data\\ssvep_ABC_20231123_202802_test.pkl"
 
     with open(file_path, "rb") as f:
         data = pickle.load(f)
@@ -711,8 +715,11 @@ if __name__ == '__main__':
     total_characters = sum(len(text) for text in texts)
 
     print(f"Total number of characters: {total_characters}")
-
+    for i in range(0,13):
+        plt.plot(np.squeeze(data['X'][i][0].squeeze().T))
+    plt.show()
     for y in data['y']:
         print(y)
+
 
 

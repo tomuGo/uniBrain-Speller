@@ -1,8 +1,9 @@
+import time
 from multiprocessing.shared_memory import ShareableList
 
 from serial.tools import list_ports
 from PyQt5.QtCore import QThread, pyqtSignal, QTimer
-from OperationSystem.Streaming.NeuroDanceEEG import NeuroDanceDevice
+from OperationSystem.Streaming.NeuroDanceEEGProcess import NeuroDanceDevice
 
 
 class UINeuroDanceController:
@@ -91,8 +92,7 @@ class UINeuroDanceController:
         for device in devices:
             self.win.BleComboBox.addItem(device['name'])
 
-
-    def serial_stop(self):
+    def stop(self):
         if self.neuro_dance_device_thread is not None:
             self.neuro_dance_device_thread.close()
         self.battery_info_timer.stop()
