@@ -45,7 +45,7 @@ class FinishProcess(BasicStimulationProcess):
         elif self.MODE == "TRAIN" or self.MODE == "TEST":
             id = self.handle_train_test_mode()
         elif self.MODE == "USE":
-            id = self.handle_use_mode()
+            id = self.handle_use_show_feedback()
         elif self.MODE =="DEBUG":
             id = self.handle_debug_mode()
 
@@ -57,6 +57,16 @@ class FinishProcess(BasicStimulationProcess):
 
         self.checkEscapeKey()
         self.change()
+
+    def handle_use_show_feedback(self):
+        if self.controller.currentResult == 0:  # means a training process
+            id = self.events.index(self.controller.cueEvent)
+        else:
+            id = self.events.index(self.controller.currentResult)
+
+        self._showFeedbackOnly(id)
+        self.controller.key_list.keys[id].run_key_function(self.controller.key_list, wait=True)
+        return id
         
     def handle_train_test_mode(self):
         """
@@ -161,4 +171,45 @@ class FinishProcess(BasicStimulationProcess):
         self.controller.historyString.append(resultChar)
         self.controller.feedback = feedback
 
+        return
+
+    def _showFeedbackOnly(self, currentResult):
+        """
+        Show feedback for the current result.
+
+        :param currentResult: Index of the current result to display
+        """
+        # Update stride text if not None
+        if self.strideText != None:
+            self.strideText.setText(str(self.controller.key_list.stride))
+
+        epochINX = self.controller.epochThisBlock
+
+        # Result character for the current epoch
+        resultChar = self.char[currentResult]
+        resultChar = '%s' % (resultChar)
+        # Placeholder for previous epochs
+        placeholder = ''
+        for _ in range(epochINX-1):
+            placeholder = placeholder + ' '
+        resultText = placeholder + resultChar
+
+        charColor = 'white'
+        result = self.drawDialogue(resultText, color=charColor, fillColor=None)
+
+        self.initFrame.draw()
+        if self.strideText != None:
+            self.strideText.draw()
+        # self.controller.feedback.draw()
+        # # result.draw()
+        # self.w.flip()
+        # core.wait(0.3)
+
+        # Update feedback for the next epoch
+        histroString = self.controller.historyString
+        feedbackText = ''.join(histroString)
+        feedback = self.drawDialogue(feedbackText + resultChar, color='white', fillColor=None)
+        self.controller.historyString.append(resultChar)
+        self.controller.feedback = feedback
+        self.controller.feedback.draw()
         return

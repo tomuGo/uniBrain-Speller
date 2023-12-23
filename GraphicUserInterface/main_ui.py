@@ -1,6 +1,7 @@
 # Append the current directory to the system path
 import sys
 
+from GraphicUserInterface.main_neuro_dance import Ui_MyWindow
 from GraphicUserInterface.ui_neuro_dance_control import UINeuroDanceController
 
 sys.path.append('.')
@@ -18,22 +19,18 @@ from multi_process_worker import operation_worker, stimulation_worker
 from make_a_report import create_pdf_main
 from ui_StimulusControl import flickering_on_complete
 
-# Load the UI file
-form_class = uic.loadUiType("GraphicUserInterface/main_neuro_dance.ui")[0]
-
 # Import custom libraries
 import ui_keyboard as key
 import ui_user as user
 import ui_hardware as hw
 import ui_processing as proc
 
-class mainWindow(QtWidgets.QMainWindow, form_class):
+class mainWindow(QtWidgets.QMainWindow, Ui_MyWindow):
     def __init__(self):
         super().__init__()
         
         # Set up the user interface by calling the setupUi method of the form_class
         self.setupUi(self)
-        
         self.stimulator = None
         self.operation_messenager_process = None
         self.stimulation_messenger_process = None
@@ -331,7 +328,7 @@ class mainWindow(QtWidgets.QMainWindow, form_class):
 
         
 if __name__ == "__main__":
-    
+    multiprocessing.freeze_support()
     # Create the application and show the form
     app = QtWidgets.QApplication([])
     win = mainWindow()

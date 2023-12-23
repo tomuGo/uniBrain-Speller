@@ -21,7 +21,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>../qt/images/u1.PNG</normaloff>../qt/images/u1.PNG</iconset>
+    <normaloff>images/u1.PNG</normaloff>images/u1.PNG</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="minimumSize">
@@ -103,7 +103,7 @@
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap>../qt/images/u1.png</pixmap>
+          <pixmap>images/u1.png</pixmap>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -194,7 +194,7 @@ Speller</string>
           <enum>QTabWidget::Rounded</enum>
          </property>
          <property name="currentIndex">
-          <number>2</number>
+          <number>0</number>
          </property>
          <property name="iconSize">
           <size>
@@ -542,7 +542,7 @@ p, li { white-space: pre-wrap; }
                  <string/>
                 </property>
                 <property name="pixmap">
-                 <pixmap>../qt/images/blank-profile-picture.png</pixmap>
+                 <pixmap>images/blank-profile-picture.png</pixmap>
                 </property>
                 <property name="scaledContents">
                  <bool>true</bool>
@@ -632,8 +632,8 @@ p, li { white-space: pre-wrap; }
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>1057</width>
-                <height>743</height>
+                <width>688</width>
+                <height>782</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_17">
@@ -936,7 +936,7 @@ p, li { white-space: pre-wrap; }
                                  <string/>
                                 </property>
                                 <property name="pixmap">
-                                 <pixmap>../qt/images/left.png</pixmap>
+                                 <pixmap>images/left.png</pixmap>
                                 </property>
                                 <property name="scaledContents">
                                  <bool>true</bool>
@@ -974,7 +974,7 @@ p, li { white-space: pre-wrap; }
                                  <string/>
                                 </property>
                                 <property name="pixmap">
-                                 <pixmap>../qt/images/right.png</pixmap>
+                                 <pixmap>images/right.png</pixmap>
                                 </property>
                                 <property name="scaledContents">
                                  <bool>true</bool>
@@ -1973,7 +1973,7 @@ p, li { white-space: pre-wrap; }
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>1057</width>
+                <width>1023</width>
                 <height>670</height>
                </rect>
               </property>
@@ -2514,7 +2514,7 @@ with Past Data</string>
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap>../qt/images/u22.png</pixmap>
+          <pixmap>images/u22.png</pixmap>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -2577,7 +2577,7 @@ with Past Data</string>
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap>../qt/images/u21.png</pixmap>
+          <pixmap>images/u21.png</pixmap>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -2641,7 +2641,7 @@ with Past Data</string>
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap>../qt/images/u24.png</pixmap>
+          <pixmap>images/u24.png</pixmap>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -2759,7 +2759,7 @@ with Past Data</string>
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap>../qt/images/u23.png</pixmap>
+          <pixmap>images/u23.png</pixmap>
          </property>
          <property name="scaledContents">
           <bool>true</bool>

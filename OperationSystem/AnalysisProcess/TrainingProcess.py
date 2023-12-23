@@ -42,6 +42,7 @@ class TrainingProcess(BasicAnalysisProcess):
         if self.controller.trainFlag is True:
             self.trainModel()
             self.performance(self.controller.trainData['X'], self.controller.trainData['y'])
+            # todo 测试去掉visual
             self.viz()
 
         self.controller.current_process = self.controller.wait_process

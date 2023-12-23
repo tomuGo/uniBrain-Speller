@@ -15,6 +15,7 @@ class UINeuroDanceController:
         self.devices = []
 
     def UI_init(self):
+        print("UI_init")
         self.win.acquisitionSystemChanged()
         self.win.NeuroDanceSerialConnectButton.clicked.connect(self.serial_connect)
         self.win.NeuroDanceDeviceConnectButton.clicked.connect(self.device_pair)

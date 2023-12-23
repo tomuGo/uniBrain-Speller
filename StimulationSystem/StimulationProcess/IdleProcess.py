@@ -105,7 +105,7 @@ class IdleProcess(BasicStimulationProcess):
         self.controller.w = self.w
         self.controller.endBlock = False
 
-        if self.MODE != "PREVIEW" and self.MODE != "USE":
+        if self.MODE != "PREVIEW" :
             self.controller.feedback = self.drawDialogue(
                 "", color='White', fillColor=None)
         return
