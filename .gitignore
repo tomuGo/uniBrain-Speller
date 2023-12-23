@@ -2,3 +2,6 @@
 *.pyc
 GraphicUserInterface/.DS_Store
 .DS_Store
+/build/build/
+/build/dist/
+/Result/
