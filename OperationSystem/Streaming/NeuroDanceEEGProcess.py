@@ -34,7 +34,7 @@ class NeuroDanceEEGProcess(NeuroDancer, QObject, BaseStreaming):
 
     # 保留5分钟的数据
     linkedlist_length = 5 * 60 * 5
-    eeg_datas = linkedlist()
+    eeg_datas = linkedlist.linkedlist()
     srate = 250
     real_sample_rate = 1000
     enable_eog = False
