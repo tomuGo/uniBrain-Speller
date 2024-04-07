@@ -12,7 +12,7 @@ class EventController(BaseEventController):
         self.port = parallel.ParallelPort(self.address)
         self.clearEvent()
 
-    def sendEvent(self, eventType):
+    def sendEvent(self, eventType, millisecond):
         self.port.setData(eventType)
         
     def clearEvent(self):

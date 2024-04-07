@@ -43,7 +43,7 @@ class TrainingProcess(BasicAnalysisProcess):
             self.trainModel()
             self.performance(self.controller.trainData['X'], self.controller.trainData['y'])
             # todo 测试去掉visual
-            self.viz()
+            # self.viz()
 
         self.controller.current_process = self.controller.wait_process
         self.messenger.state.current_detect_state = 'INIT'
@@ -148,8 +148,10 @@ class TrainingProcess(BasicAnalysisProcess):
                                 p_value=self.p_value, frequency=self.frequency, phase=self.phase, n_band=5, lag=self.lag)
                 elif self.feature_algo == "FBCCA":
                     model = fbCCA(frequency=self.frequency, winLEN=winLEN, srate=self.srate, conditionNUM=self.targetNUM, lag=self.lag)
-                    
-
+                # 光电池测试 需要
+                # shape = Xtrain.shape
+                # data = np.random.rand(shape[0], shape[1] - 1, shape[2])
+                # Xtrain[:, 0:7] = data
                 model.fit(Xtrain, ytrain)
                 if self.feature_algo == "TRCA" and np.iscomplexobj(model.filters):
                     print(f"Under window length of {winLEN}s, model's filters are complex")
@@ -240,14 +242,14 @@ class TrainingProcess(BasicAnalysisProcess):
                           conditionNUM=self.targetNUM, lag=self.lag)
         elif self.feature_algo == "TDCA":
             model = TDCA(winLEN=self.winLEN, srate=self.srate)
-
         trainX = self.controller.trainData['X']
         trainy = self.controller.trainData['y']
-
         trainX, trainy = np.squeeze(trainX), np.squeeze(trainy)
-
+        # 光电池测试 训练模式，把这里打开
+        # shape = trainX.shape
+        # data = np.random.rand(shape[0], shape[1] - 1, shape[2])
+        # trainX[:, 0:7] = data
         model.fit(trainX, trainy)
-
         self.controller.testing_process.algorithm = model
 
         if self.progress_manager != None:

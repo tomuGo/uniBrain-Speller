@@ -685,6 +685,11 @@ class TDCA(TRCA):
 
         return np.transpose(filtered, (1, 2, 0))
 
+def fft(data, fs):
+    fft_result = np.fft.fft(data)
+    frequencies = np.fft.fftfreq(len(data), 1 / fs)
+    freq_range = (frequencies >= 0.3) & (frequencies <= 50)
+    return fft_result[freq_range], frequencies[freq_range]
 
 if __name__ == '__main__':
     import os
@@ -696,7 +701,10 @@ if __name__ == '__main__':
     import matplotlib.pyplot as plt
     current_path = os.getcwd()
     #sys.path.append(current_path)
-    file_path = "D:\\workspace\\NeuroDance\\uniBrain-Speller\\Result\\uwenlong\\data\\ssvep_ABC_20231207_150934_test.pkl"
+    file_path = "D:\\workspace\\uniBrain-Speller\\Result\\123\\data\\ssvep_Keyboard 43 keys_20240406_225357_test.pkl"
+    # file_path = "E:\\Files\\Wechat\\WeChat Files\\wxid_8bsv31xyl7mi21\\FileStorage\\File\\2024-04\\ssvep_Keyboard 43 keys_20231201_170227_train.pkl"
+
+
 
     with open(file_path, "rb") as f:
         data = pickle.load(f)
@@ -715,11 +723,12 @@ if __name__ == '__main__':
     total_characters = sum(len(text) for text in texts)
 
     print(f"Total number of characters: {total_characters}")
-    for i in range(0, 26):
-        plt.plot(np.squeeze(data['X'][i][0].squeeze().T))
+    ffts, freqs = fft(np.squeeze(data['X'][0][0][7].squeeze().T), 250)
+    plt.plot(freqs, ffts)
+
+    for i in range(0, 86):
+        plt.plot(np.squeeze(data['X'][i][0][7].squeeze().T))
     plt.show()
-    for y in data['y']:
-        print(y)
 
 
 

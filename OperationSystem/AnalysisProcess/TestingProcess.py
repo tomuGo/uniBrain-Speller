@@ -77,14 +77,14 @@ class TestingProcess(BasicAnalysisProcess):
                 trainy = np.concatenate((trainy, data['y']), axis=0)
 
         if self.feature_algo == 'TRCA':
-            from AnalysisProcess.OperatorMethod.spatialFilter import TRCA
+            from OperatorMethod.spatialFilter import TRCA
             model = TRCA(montage=self.targetNUM, winLEN=self.winLEN, srate=self.srate, sync_mode=self.sync_mode, p_value=self.p_value,
                         frequency=self.frequency, phase=self.phase, n_band=5)
         elif self.feature_algo == "FBCCA":
-            from AnalysisProcess.OperatorMethod.spatialFilter import fbCCA
+            from OperatorMethod.spatialFilter import fbCCA
             model = fbCCA(frequency=self.frequency, winLEN=self.winLEN, srate=self.srate, conditionNUM=self.targetNUM, lag=self.lag)
         elif self.feature_algo == "TDCA":
-            from AnalysisProcess.OperatorMethod.spatialFilter import TDCA
+            from OperatorMethod.spatialFilter import TDCA
             model = TDCA(winLEN=self.winLEN, srate=self.srate)
 
         model.fit(trainX, trainy)
@@ -274,9 +274,9 @@ class TestingProcess(BasicAnalysisProcess):
         # Record results on a block-by-block basis
 
         blockINX  = self.controller.currentBlockINX
-
-        # y = np.concatenate(self.controller.testData['y'][-(self.controller.currentEpochINX+1):])
-        y = self.controller.testData['y'][-(self.controller.currentEpochINX+1):]
+        # todo y用哪个
+        y = np.concatenate(self.controller.testData['y'][-(self.controller.currentEpochINX+1):])
+        # y = self.controller.testData['y'][-(self.controller.currentEpochINX+1):]
         y_ = self.controller.results[-(self.controller.currentEpochINX+1):]
         winLEN = np.array(self.controller.testData['t'][-(self.controller.currentEpochINX+1):])
         average_winLEN = np.mean(winLEN)

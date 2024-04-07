@@ -1,3 +1,5 @@
+import time
+
 from StimulationSystem.StimulationProcess.BasicStimulationProcess import BasicStimulationProcess
 from psychopy import core
 import datetime
@@ -73,17 +75,19 @@ class StimulateProcess(BasicStimulationProcess):
                 self.w.flip(False)
 
                 while frameINX < len(self.frameSet):
-
+                    millis_second = 0
+                    if frameINX == 0:
+                        millis_second = int(round(time.time() * 1000))
+                        print("Frame 1 draw start :{}".format(millis_second))
                     self.frameSet[frameINX].draw()
                     self.w.flip(False)
-
                     if droppedFrames != self.w.nDroppedFrames:
                         troubled_frame.append(frameINX)
                         droppedFrames = self.w.nDroppedFrames
 
                     if frameINX == 0:
                         if self.MODE != 'PREVIEW':
-                            self.eventController.sendEvent(self.controller.cueEvent)
+                            self.eventController.sendEvent(self.controller.cueEvent, millis_second)
 
                     frameINX += 1
 

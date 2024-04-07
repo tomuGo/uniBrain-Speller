@@ -96,7 +96,7 @@ class NeuroDanceEEGProcess(NeuroDancer, QObject, BaseStreaming):
             event_type = event_info[1]
             if stimulation_time > 0 and 0 < event_type < 200:
                 # 屏幕刷新率 60hz
-                stimulation_time = stimulation_time + 16
+                # stimulation_time = stimulation_time + 16
                 print("readFixedData stimulation_time:{0},eventType:{1}".format(stimulation_time,event_type))
                 data = None
                 while data is None:
@@ -115,7 +115,7 @@ class NeuroDanceEEGProcess(NeuroDancer, QObject, BaseStreaming):
             event_type = event_info[1]
             if stimulation_time > 0 and 0 < event_type < 200:
                 # 屏幕刷新率 60hz
-                stimulation_time = stimulation_time + 16
+                # stimulation_time = stimulation_time + 16
                 print("readFlowData stimulation_time:{0},eventType:{1}".format(stimulation_time, event_type))
                 data = None
                 while data is None:

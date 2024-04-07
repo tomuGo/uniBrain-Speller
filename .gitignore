@@ -5,3 +5,9 @@ GraphicUserInterface/.DS_Store
 /build/build/
 /build/dist/
 /Result/
+.idea/.gitignore
+.idea/misc.xml
+.idea/modules.xml
+.idea/uniBrain-Speller.iml
+.idea/vcs.xml
+.idea/inspectionProfiles/profiles_settings.xml

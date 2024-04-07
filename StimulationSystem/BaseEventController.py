@@ -1,7 +1,7 @@
 
 class BaseEventController:
 
-    def sendEvent(self, eventType):
+    def sendEvent(self, eventType, millisecond):
         pass
 
     def clearEvent(self):

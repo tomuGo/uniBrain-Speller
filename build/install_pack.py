@@ -19,9 +19,9 @@ if __name__ == '__main__':
                 '-D', '--add-data=..\\GraphicUserInterface\\images;GraphicUserInterface\\images',
                 '-D', '--add-data=..\\GraphicUserInterface\\keyboard_list;GraphicUserInterface\\keyboard_list',
                 '-D', '--add-data=..\\CommonSystem\\config.pkl;CommonSystem',
-                '--paths', 'D:\\Dev\\MiniConda\\envs\\uniBrain-Speller\\Lib\\site-packages',
-                '-D', '--add-data=D:\\Dev\\MiniConda\\envs\\uniBrain-Speller\\Lib\\site-packages\\psychopy;psychopy',
-                '-D', '--add-data=D:\\Dev\\MiniConda\\envs\\uniBrain-Speller\\Lib\\site-packages\\tables;tables',
+                '--paths', 'D:\\Workspace\\uniBrain-Speller\\venv\\Lib\\site-packages',
+                '-D', '--add-data=D:\\Workspace\\uniBrain-Speller\\venv\\Lib\\site-packages\\psychopy;psychopy',
+                '-D', '--add-data=D:\\Workspace\\uniBrain-Speller\\venv\\Lib\\site-packages\\tables;tables',
                 # "--collect -binaries pywin32",
                 "..\\GraphicUserInterface\\main_ui.py"
         ]
