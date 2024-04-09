@@ -13,10 +13,12 @@ class NeuroDanceEventController(BaseEventController):
 
     def sendEvent(self, eventType, millisecond):
         sync_event_info = shared_memory.ShareableList(name='Event')
-        sync_event_info[0] = millisecond
+        millis_second = int(round(time.time() * 1000))
+        sync_event_info[0] = millis_second
         sync_event_info[1] = eventType
+
         # NeuroDanceEEGThread.neuro_dance_event_info = NeuroDanceEventInfo(millis_second, eventType)
-        print("NeuroDanceEventController stimulatetime{0},,eventType::{1}".format(millisecond, eventType))
+        print("NeuroDanceEventController stimulatetime{0},,eventType::{1}".format(sync_event_info[0], eventType))
 
     def clearEvent(self):
         sync_event_info = shared_memory.ShareableList(name='Event')

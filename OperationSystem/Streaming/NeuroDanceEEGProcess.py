@@ -57,7 +57,7 @@ class NeuroDanceEEGProcess(NeuroDancer, QObject, BaseStreaming):
     def _initFilter(self):
         fs = 250  # Sample frequency (Hz)
         f0 = 50.0  # Frequency to be removed from signal (Hz)
-        Q = 30.0  # Quality factor
+        Q = 90.0  # Quality factor
 
         b, a = signal.iirnotch(f0, Q, fs)
         notch = [b, a]
@@ -181,7 +181,11 @@ class NeuroDanceEEGProcess(NeuroDancer, QObject, BaseStreaming):
 
         b_notch, a_notch = notchFilter
 
-        x_notched = signal.filtfilt(b_notch, a_notch, x, axis=-1)
+        x_notched1 = signal.filtfilt(b_notch, a_notch, x, axis=-1)
+        x_notched = signal.filtfilt(b_notch, a_notch, x_notched1, axis=-1)
+        # x_notched3 = signal.filtfilt(b_notch, a_notch, x_notched2, axis=-1)
+        # x_notched = signal.filtfilt(b_notch, a_notch, x_notched3, axis=-1)
+
 
         processed = x_notched
 
